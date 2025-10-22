@@ -1,0 +1,22 @@
+<pre>```json
+{
+  "files": [
+    {
+      "path": "index.html",
+      "content": "<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n    <meta charset=\"UTF-8\">\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n    <title>Data Processing Results</title>\n    <link rel=\"stylesheet\" href=\"https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css\">\n</head>\n<body>\n    <div class=\"container mt-5\">\n        <h1>Data Processing Results</h1>\n        <div id=\"results\" class=\"mt-4\">\n            <p>Results will be displayed here after processing.</p>\n        </div>\n    </div>\n    <script>\n        fetch('result.json')\n            .then(response => response.json())\n            .then(data => {\n                const resultsDiv = document.getElementById('results');\n                resultsDiv.innerHTML = '<pre>' + JSON.stringify(data, null, 2) + '</pre>';\n            })\n            .catch(error => {\n                console.error('Error fetching results:', error);\n                document.getElementById('results').innerHTML = '<p>Error fetching results.</p>';\n            });\n    </script>\n</body>\n</html>"
+    },
+    {
+      "path": "README.md",
+      "content": "# Data Processing Web App\n\nThis is a minimal web application that displays the results of a data processing script written in Python. The application fetches results from a generated JSON file after executing a Python script that processes data from an Excel file.\n\n## Features\n- Processes data from `data.xlsx` and outputs results in `result.json`.\n- Displays results in a user-friendly format on a single-page web app.\n- Utilizes GitHub Actions for CI/CD to ensure code quality and automate the data processing.\n\n## Setup\n1. Ensure you have Python 3.11+ and Pandas 2.3 installed.\n2. The `execute.py` script processes the data and generates `result.json`.\n3. The web app fetches `result.json` to display the results.\n\n## GitHub Actions\nThe project includes a GitHub Actions workflow located at `.github/workflows/ci.yml` that:\n- Runs `ruff` for code linting.\n- Executes the `execute.py` script to generate `result.json`.\n- Publishes the results via GitHub Pages.\n\n## Usage\n- Clone the repository and run the Python script to process the data.\n- Open `index.html` in a web browser to view the results."
+    },
+    {
+      "path": ".github/workflows/ci.yml",
+      "content": "name: CI\n\non:\n  push:\n    branches:\n      - main\n\njobs:\n  lint:\n    runs-on: ubuntu-latest\n    steps:\n      - name: Checkout code\n        uses: actions/checkout@v2\n\n      - name: Set up Python\n        uses: actions/setup-python@v2\n        with:\n          python-version: '3.11'\n\n      - name: Install dependencies\n        run: |\n          python -m pip install --upgrade pip\n          pip install pandas ruff\n\n      - name: Run ruff\n        run: ruff .\n\n      - name: Run execute.py\n        run: python execute.py > result.json\n\n      - name: Publish result.json\n        uses: peaceiris/actions-gh-pages@v3\n        with:\n          github_token: ${{ secrets.GITHUB_TOKEN }}\n          publish_dir: ./\n          publish_branch: gh-pages\n          publish_path: result.json\n"
+    },
+    {
+      "path": "data.csv",
+      "content": "This file is generated from data.xlsx and contains the processed data in CSV format."
+    }
+  ]
+}
+```</pre>
